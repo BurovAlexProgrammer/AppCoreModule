@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using AppCoreModule.Scripts.UI.Screens;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
-namespace AppCoreModule.Scripts.UI.Screens
+namespace AppCoreModule.Scripts.Services
 {
-    public class ScreenService
+    public class ScreenService: BaseService, IDisposable
     {
         private readonly Queue<BaseScreen> _screens = new();
         private Canvas _screenCanvas;
@@ -25,6 +28,10 @@ namespace AppCoreModule.Scripts.UI.Screens
         public void GoBack()
         {
             
+        }
+
+        public void Dispose()
+        {
         }
     }
 }
