@@ -3,16 +3,16 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 
-namespace AppCoreModule.Windows
+namespace AppCoreModule.Scripts.UI.TransitEffects
 {
-    public class DefaultCloseWindowEffect : IWindowTransitEffect
+    public class DefaultCloseScreenEffect : ITransitEffect
     {
         private Action<RectTransform> _effectAction;
         private readonly RectTransform _rectTransform;
 
         private const float Time = 0.25f; 
 
-        public DefaultCloseWindowEffect(RectTransform rectTransform)
+        public DefaultCloseScreenEffect(RectTransform rectTransform)
         {
             _rectTransform = rectTransform;
         }

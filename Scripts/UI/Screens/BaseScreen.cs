@@ -1,21 +1,22 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using AppCoreModule.Scripts.UI.TransitEffects;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace AppCoreModule.Windows
+namespace AppCoreModule.Scripts.UI.Screens
 {
     [RequireComponent(typeof(RectTransform))]
-    public class BaseWindow : MonoBehaviour
+    public class BaseScreen : MonoBehaviour
     {
-        private IWindowTransitEffect _openTransitEffect;
-        private IWindowTransitEffect _closeTransitEffect;
+        private ITransitEffect _openTransitEffect;
+        private ITransitEffect _closeTransitEffect;
 
         private bool _initialized;
 
         public void Init()
         {
             var rectTransform = GetComponent<RectTransform>();
-            _openTransitEffect = new DefaultOpenWindowEffect(rectTransform);
-            _closeTransitEffect = new DefaultCloseWindowEffect(rectTransform);
+            _openTransitEffect = new DefaultOpenScreenEffect(rectTransform);
+            _closeTransitEffect = new DefaultCloseScreenEffect(rectTransform);
             _initialized = true;
         }
 

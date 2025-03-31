@@ -3,16 +3,16 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 
-namespace AppCoreModule.Windows
+namespace AppCoreModule.Scripts.UI.TransitEffects
 {
-    public class DefaultOpenWindowEffect : IWindowTransitEffect
+    public class DefaultOpenScreenEffect : ITransitEffect
     {
         private Action<RectTransform> _effectAction;
         private readonly RectTransform _rectTransform;
 
         private const float Time = 0.25f; 
 
-        public DefaultOpenWindowEffect(RectTransform rectTransform)
+        public DefaultOpenScreenEffect(RectTransform rectTransform)
         {
             _rectTransform = rectTransform;
         }
