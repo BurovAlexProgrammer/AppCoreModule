@@ -2,7 +2,7 @@
     "name": "AppCore.Services.Editor",
     "rootNamespace": "",
     "references": [
-        "GUID:91794cf7787abe64cb07a480e48e4e57"
+        "GUID:317032d7b0b91b6468a86ea10d0d12b9"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

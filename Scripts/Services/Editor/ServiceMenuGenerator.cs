@@ -14,44 +14,60 @@ namespace AppCoreModule.Scripts.Services.Editor
     public class ServiceMenuGenerator
     {
         private const string MenuFilePath = "Assets/AppCoreModule/Scripts/Services/Editor/GenerateServiceMenu.cs";
+        private const string CompiledWithErrorPrefsKey = "ServiceMenuGenerator_CompiledWithError";
+        private const string CompileErrorMessagePrefsKey = "ServiceMenuGenerator_CompiledErrorMessage";
+        private const string GeneratedCodePrefsKey = "ServiceMenuGenerator_GeneratedCode";
+        
+        private static bool CompiledWithError
+        {
+            get
+            {
+                if (PlayerPrefs.HasKey(CompiledWithErrorPrefsKey) == false)
+                {
+                    return false;
+                }
+                return PlayerPrefs.GetInt(CompiledWithErrorPrefsKey, 0) == 1;
+            }
+
+            set => PlayerPrefs.SetInt(CompiledWithErrorPrefsKey, value ? 1 : 0);
+        }
 
         [InitializeOnLoad]
         public static class PreCompilationRunner
         {
-            // Статический конструктор вызывается сразу при загрузке скриптов в редакторе
             static PreCompilationRunner()
             {
-                // CompilationPipeline.compilationStarted += OnCompilationStarted;
                 CompilationPipeline.assemblyCompilationFinished += OnAssemblyCompilationFinished;
             }
 
             private static void OnAssemblyCompilationFinished(string assemblyPath, CompilerMessage[] messages)
-            {
-                bool hasErrors = false;
-                foreach (var message in messages) 
-                {
-                    if (message.type == CompilerMessageType.Error)
-                    {
-                        hasErrors = true;
-                        break;
-                    }
-                }
-
-                if (hasErrors)
+            { 
+                if (messages.Any(x => x.type == CompilerMessageType.Error))
                 {
                     Debug.Log("Сборка " + assemblyPath + " завершилась с ошибками. Вызывается метод для обработки ошибок.");
                     File.Delete(MenuFilePath);
+                    CompiledWithError = true; 
+                    PlayerPrefs.SetString(CompileErrorMessagePrefsKey, messages.First(x => x.type == CompilerMessageType.Error).message);
                 }
-                else
+                else 
                 {
                     Debug.Log("Сборка " + assemblyPath + " успешно скомпилирована.");
                 }
             }
         }
-    
+
         [DidReloadScripts]
         private static void GenerateServiceMenu()
         {
+            if (CompiledWithError)
+            {
+                CompiledWithError = false;
+                Debug.LogError(PlayerPrefs.GetString(CompileErrorMessagePrefsKey));
+                Debug.LogError($"ServiceMenuGenerator: Generated code: \n{PlayerPrefs.GetString(GeneratedCodePrefsKey)}");
+                Debug.Log("ServiceMenuGenerator: generated file was removed.");
+                return;
+            }
+
             var serviceTypes = GetAllServiceTypes();
             var code = GenerateCode(serviceTypes);
 
@@ -85,30 +101,30 @@ namespace AppCoreModule.Scripts.Services.Editor
 
             code += "}";
 
+            PlayerPrefs.SetString(GeneratedCodePrefsKey, code);
             return code;
         }
 
-        [MenuItem("GameObject/Services/serviceType")]
-        public static void serviceType_MenuItem()
-        {
-            var serviceType = typeof(ScreenService);
-            GameObject obj = new GameObject(serviceType.Name);
-            obj.AddComponent(serviceType);
-            Selection.activeGameObject = obj;
-            Undo.RegisterCreatedObjectUndo(obj, "Create " + serviceType.Name);
-        }
+        // [MenuItem("GameObject/Services/serviceType")]
+        // public static void serviceType_MenuItem()
+        // {
+        //     var serviceType = typeof(ScreenService);
+        //     GameObject obj = new GameObject(serviceType.Name);
+        //     obj.AddComponent(serviceType);
+        //     Selection.activeGameObject = obj;
+        //     Undo.RegisterCreatedObjectUndo(obj, "Create " + serviceType.Name);
+        // }
 
         private static string GenerateServiceMenu(Type serviceType)
         {
             var codePart = $@"
-            [MenuItem(""GameObject/Services/ServicesList"")]
-            public static void {serviceType.Name}_MenuItem(){{";
-            var instance = new GameObject(serviceType.Name);
-            instance.AddComponent(serviceType);
-            Selection.activeGameObject = instance;
-            Undo.RegisterCreatedObjectUndo(instance, "Create" + serviceType.Name);  
-                
-            codePart += "}";
+            [MenuItem(""GameObject/Services/{serviceType.Name}"")]
+            public static void {serviceType.Name}_MenuItem(){{
+                var instance = new GameObject(""{serviceType.Name}"");
+                instance.AddComponent<{serviceType.Name}>();
+                Selection.activeGameObject = instance;
+                Undo.RegisterCreatedObjectUndo(instance, ""Create {serviceType.Name}""); 
+            }}";
 
             return codePart;
         }
@@ -116,7 +132,7 @@ namespace AppCoreModule.Scripts.Services.Editor
         private static string GenerateUsings(IEnumerable<Type> serviceTypes)
         {
             var result = new StringBuilder();
-        
+
             foreach (var serviceType in serviceTypes)
             {
                 result.Append($"using {serviceType.Namespace};");
