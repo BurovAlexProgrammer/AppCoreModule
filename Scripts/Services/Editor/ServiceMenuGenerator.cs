@@ -13,7 +13,7 @@ namespace AppCoreModule.Scripts.Services.Editor
 {
     public class ServiceMenuGenerator
     {
-        private const string MenuFilePath = "Assets/AppCoreModule/Scripts/Services/Editor/GenerateServiceMenu.cs";
+        private const string MenuFilePath = "Assets/AppCoreModule/Scripts/Services/Editor/GeneratedServiceMenu.cs";
         private const string CompiledWithErrorPrefsKey = "ServiceMenuGenerator_CompiledWithError";
         private const string CompileErrorMessagePrefsKey = "ServiceMenuGenerator_CompiledErrorMessage";
         private const string GeneratedCodePrefsKey = "ServiceMenuGenerator_GeneratedCode";
