@@ -11,48 +11,42 @@ using Assembly = System.Reflection.Assembly;
 
 namespace AppCoreModule.Scripts.Services.Editor
 {
-    public class ServiceMenuGenerator
+    /// <summary>
+    /// Generates context menu for creating services 
+    /// </summary>
+    [InitializeOnLoad]
+    public static class ServiceMenuGenerator
     {
         private const string MenuFilePath = "Assets/AppCoreModule/Scripts/Services/Editor/GeneratedServiceMenu.cs";
         private const string CompiledWithErrorPrefsKey = "ServiceMenuGenerator_CompiledWithError";
         private const string CompileErrorMessagePrefsKey = "ServiceMenuGenerator_CompiledErrorMessage";
         private const string GeneratedCodePrefsKey = "ServiceMenuGenerator_GeneratedCode";
-        
+
         private static bool CompiledWithError
         {
-            get
-            {
-                if (PlayerPrefs.HasKey(CompiledWithErrorPrefsKey) == false)
-                {
-                    return false;
-                }
-                return PlayerPrefs.GetInt(CompiledWithErrorPrefsKey, 0) == 1;
-            }
-
+            get => PlayerPrefs.GetInt(CompiledWithErrorPrefsKey, 0) == 1;
             set => PlayerPrefs.SetInt(CompiledWithErrorPrefsKey, value ? 1 : 0);
         }
-
-        [InitializeOnLoad]
-        public static class PreCompilationRunner
+        
+        static ServiceMenuGenerator()
         {
-            static PreCompilationRunner()
-            {
-                CompilationPipeline.assemblyCompilationFinished += OnAssemblyCompilationFinished;
-            }
+            CompilationPipeline.assemblyCompilationFinished += OnAssemblyCompilationFinished;
+        }
 
-            private static void OnAssemblyCompilationFinished(string assemblyPath, CompilerMessage[] messages)
-            { 
-                if (messages.Any(x => x.type == CompilerMessageType.Error))
-                {
-                    Debug.Log("Сборка " + assemblyPath + " завершилась с ошибками. Вызывается метод для обработки ошибок.");
-                    File.Delete(MenuFilePath);
-                    CompiledWithError = true; 
-                    PlayerPrefs.SetString(CompileErrorMessagePrefsKey, messages.First(x => x.type == CompilerMessageType.Error).message);
-                }
-                else 
-                {
-                    Debug.Log("Сборка " + assemblyPath + " успешно скомпилирована.");
-                }
+        private static void OnAssemblyCompilationFinished(string assemblyPath, CompilerMessage[] messages)
+        { 
+            if (messages.Any(x => x.type == CompilerMessageType.Error))
+            {
+                Debug.Log($"Сборка {assemblyPath} завершилась с ошибками.");
+                File.Delete(MenuFilePath);
+                CompiledWithError = true; 
+                PlayerPrefs.SetString(CompileErrorMessagePrefsKey, messages.First(x => x.type == CompilerMessageType.Error).message);
+            }
+            else 
+            {
+                Debug.Log($"Сборка {assemblyPath} успешно скомпилирована.");
+                PlayerPrefs.SetString(CompileErrorMessagePrefsKey, null);
+                PlayerPrefs.SetString(GeneratedCodePrefsKey, null);
             }
         }
 
