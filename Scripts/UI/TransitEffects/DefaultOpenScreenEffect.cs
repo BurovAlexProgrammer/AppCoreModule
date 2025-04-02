@@ -7,20 +7,13 @@ namespace AppCoreModule.Scripts.UI.TransitEffects
 {
     public class DefaultOpenScreenEffect : ITransitEffect
     {
-        private Action<RectTransform> _effectAction;
-        private readonly RectTransform _rectTransform;
+        private const float Time = 0.25f;
 
-        private const float Time = 0.25f; 
-
-        public DefaultOpenScreenEffect(RectTransform rectTransform)
+        public async UniTask RunAsync(GameObject targetGameObject)
         {
-            _rectTransform = rectTransform;
-        }
-
-        public async UniTask RunAsync()
-        {
-            _rectTransform.localScale = Vector3.zero;
-            await _rectTransform.DOScale(Vector2.one, Time).SetEase(Ease.InOutCubic).AsyncWaitForCompletion();
+            var rectTransform = targetGameObject.GetComponent<RectTransform>();
+            rectTransform.localScale = Vector3.zero;
+            await rectTransform.DOScale(Vector2.one, Time).SetEase(Ease.InOutCubic).AsyncWaitForCompletion();
         }
     }
 }

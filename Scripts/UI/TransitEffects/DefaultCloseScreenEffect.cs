@@ -7,20 +7,13 @@ namespace AppCoreModule.Scripts.UI.TransitEffects
 {
     public class DefaultCloseScreenEffect : ITransitEffect
     {
-        private Action<RectTransform> _effectAction;
-        private readonly RectTransform _rectTransform;
+        private const float Time = 0.25f;
 
-        private const float Time = 0.25f; 
-
-        public DefaultCloseScreenEffect(RectTransform rectTransform)
+        public async UniTask RunAsync(GameObject targetGameObject)
         {
-            _rectTransform = rectTransform;
-        }
-
-        public async UniTask RunAsync()
-        {
-            _rectTransform.localScale = Vector3.one;
-            _rectTransform.DOScale(Vector2.zero, Time).SetEase(Ease.InOutCubic);
+            var rectTransform = targetGameObject.GetComponent<RectTransform>();
+            rectTransform.localScale = Vector3.one;
+            await rectTransform.DOScale(Vector2.zero, Time).SetEase(Ease.InOutCubic).AsyncWaitForCompletion();
         }
     }
 }

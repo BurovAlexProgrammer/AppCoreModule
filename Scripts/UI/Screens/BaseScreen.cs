@@ -1,4 +1,6 @@
-﻿using AppCoreModule.Scripts.UI.TransitEffects;
+﻿using System;
+using AppCoreModule.Scripts.UI.TransitEffects;
+using AppCoreModule.Scripts.UI.TransitEffects.Settings;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -7,16 +9,12 @@ namespace AppCoreModule.Scripts.UI.Screens
     [RequireComponent(typeof(RectTransform))]
     public class BaseScreen : MonoBehaviour
     {
-        private ITransitEffect _openTransitEffect;
-        private ITransitEffect _closeTransitEffect;
-
+        protected TransitEffectSettings _transitEffectSettings;
         private bool _initialized;
 
-        public void Init()
+        public void Init(TransitEffectSettings transitEffectSettings)
         {
-            var rectTransform = GetComponent<RectTransform>();
-            _openTransitEffect = new DefaultOpenScreenEffect(rectTransform);
-            _closeTransitEffect = new DefaultCloseScreenEffect(rectTransform);
+            _transitEffectSettings = transitEffectSettings;
             _initialized = true;
         }
 
@@ -28,7 +26,8 @@ namespace AppCoreModule.Scripts.UI.Screens
                 return;
             }
             
-            await _openTransitEffect.RunAsync();
+            gameObject.SetActive(true);
+            await _transitEffectSettings.OpenScreenEffect.RunAsync(gameObject);
         }
 
         public async UniTask Close()
@@ -39,7 +38,8 @@ namespace AppCoreModule.Scripts.UI.Screens
                 return;
             }
             
-            await _closeTransitEffect.RunAsync();
+            await _transitEffectSettings.CloseScreenEffect.RunAsync(gameObject);
+            gameObject.SetActive(false);
         }
     }
 }
