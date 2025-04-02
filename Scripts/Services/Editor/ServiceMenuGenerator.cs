@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if AppCoreTest
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -136,3 +137,4 @@ namespace AppCoreModule.Scripts.Services.Editor
         }
     }
 }
+#endif

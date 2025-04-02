@@ -9,8 +9,9 @@ namespace AppCoreModule.Scripts.Services
 {
     public class ScreenService: BaseService, IDisposable
     {
-        private readonly Queue<BaseScreen> _screens = new();
-        private Canvas _screenCanvas;
+        [SerializeField] private Canvas _screenCanvas;
+        
+        private readonly Stack<BaseScreen> _screens = new();
 
         public void Init(Canvas screenCanvas)
         {
@@ -20,7 +21,7 @@ namespace AppCoreModule.Scripts.Services
         public void OpenWindow(BaseScreen baseScreenPrefab)
         {
             var baseScreen = Object.Instantiate(baseScreenPrefab, _screenCanvas.transform);
-            _screens.Enqueue(baseScreen);
+            _screens.Push(baseScreen);
             baseScreen.Init();
             baseScreen.Open().Forget();
         }
