@@ -7,7 +7,9 @@ namespace AppCoreModule.Scripts.Contexts
     {
         private static GameObject _projectContext;
 
+#if AppCoreServiceLocator
         [RuntimeInitializeOnLoadMethod]
+#endif
         public static void Initialize()
         {
             _projectContext = Object.Instantiate(new GameObject("ProjectContext"));
