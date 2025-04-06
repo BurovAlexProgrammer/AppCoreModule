@@ -1,6 +1,4 @@
-﻿using System;
-using AppCoreModule.Scripts.UI.TransitEffects;
-using AppCoreModule.Scripts.UI.TransitEffects.Settings;
+﻿using AppCoreModule.Scripts.UI.TransitEffects.Settings;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 

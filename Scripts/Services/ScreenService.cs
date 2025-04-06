@@ -45,11 +45,11 @@ namespace AppCoreModule.Scripts.Services
         {
             if (_currentScreen != null)
             {
+                _screens.Push(_currentScreen);
                 await _currentScreen.Close();
             }
             
             var baseScreen = InstantiateScreen(baseScreenPrefab);
-            _screens.Push(baseScreen);
             baseScreen.Init(_transitEffectSettings);
             await baseScreen.Open();
             _currentScreen = baseScreen;
@@ -69,11 +69,13 @@ namespace AppCoreModule.Scripts.Services
         
         public async UniTask GoBackAsync()
         {
-            if (_screens.Count > 1)
+            if (_screens.Count >= 1)
             {
                 await _currentScreen.Close();
-                var screen = _screens.Pop();
-                await screen.Open();
+                var prevScreen = _screens.Pop();
+                Destroy(_currentScreen.gameObject);
+                _currentScreen = prevScreen;
+                await prevScreen.Open();
             }
             else
             {
