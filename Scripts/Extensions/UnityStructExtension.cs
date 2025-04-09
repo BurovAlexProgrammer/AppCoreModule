@@ -48,7 +48,7 @@ namespace AppCoreModule.Scripts.Extensions
         {
             if (hex.Length<6)
             {
-                throw new System.FormatException("Needs a string with a length of at least 6");
+                throw new FormatException("Needs a string with a length of at least 6");
             }
 
             var r = hex.Substring(0, 2);
