@@ -8,12 +8,18 @@ namespace AppCoreModule.Scripts.UI.Screens
     public class BaseScreen : MonoBehaviour
     {
         protected TransitEffectSettings _transitEffectSettings;
+        
         private bool _initialized;
 
-        public void Init(TransitEffectSettings transitEffectSettings)
+        public void BaseInit(TransitEffectSettings transitEffectSettings)
         {
             _transitEffectSettings = transitEffectSettings;
+            Init();
             _initialized = true;
+        }
+
+        protected virtual void Init()
+        {
         }
 
         public async UniTask Open()

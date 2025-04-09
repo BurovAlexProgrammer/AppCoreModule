@@ -36,23 +36,35 @@ namespace AppCoreModule.Scripts.Services
             FadeInOnAwake();
         }
 
-        public void OpenScreen(BaseScreen baseScreenPrefab)
+        public void OpenScreen(BaseScreen baseScreenPrefab, bool clearPrevScreens = false)
         {
-            OpenScreenAsync(baseScreenPrefab).Forget();
+            OpenScreenAsync(baseScreenPrefab, clearPrevScreens).Forget();
         }
         
-        public async UniTask OpenScreenAsync(BaseScreen baseScreenPrefab)
+        public async UniTask OpenScreenAsync(BaseScreen baseScreenPrefab, bool clearPrevScreens = false)
         {
             if (_currentScreen != null)
             {
                 _screens.Push(_currentScreen);
                 await _currentScreen.Close();
             }
-            
+
+            if (clearPrevScreens) ClearPrevScreens();
+
             var baseScreen = InstantiateScreen(baseScreenPrefab);
-            baseScreen.Init(_transitEffectSettings);
+            baseScreen.BaseInit(_transitEffectSettings);
             await baseScreen.Open();
             _currentScreen = baseScreen;
+        }
+
+        private void ClearPrevScreens()
+        {
+            foreach (var baseScreen in _screens)
+            {
+                Destroy(baseScreen.gameObject);
+            }
+            
+            _screens.Clear();
         }
 
         protected virtual BaseScreen InstantiateScreen(BaseScreen screenPrefab)
