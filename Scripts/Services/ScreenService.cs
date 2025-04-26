@@ -20,7 +20,7 @@ namespace AppCoreModule.Scripts.Services
         private BaseScreen _currentScreen;
         private bool _fadeInOnAwake;
 
-        public void Init(bool fadeInOnAwake, TransitEffectSettings transitEffectSettings = default)
+        public virtual void Init(bool fadeInOnAwake, TransitEffectSettings transitEffectSettings = default)
         {
             _transitEffectSettings = transitEffectSettings;
 
@@ -36,12 +36,12 @@ namespace AppCoreModule.Scripts.Services
             FadeInOnAwake();
         }
 
-        public void OpenScreen(BaseScreen baseScreenPrefab, bool clearPrevScreens = false)
+        protected void OpenScreen(BaseScreen baseScreenPrefab, bool clearPrevScreens = false)
         {
             OpenScreenAsync(baseScreenPrefab, clearPrevScreens).Forget();
         }
         
-        public async UniTask OpenScreenAsync(BaseScreen baseScreenPrefab, bool clearPrevScreens = false)
+        protected async UniTask OpenScreenAsync(BaseScreen baseScreenPrefab, bool clearPrevScreens = false)
         {
             if (_currentScreen != null)
             {
