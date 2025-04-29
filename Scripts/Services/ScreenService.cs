@@ -35,6 +35,11 @@ namespace AppCoreModule.Scripts.Services
             _fadeInOnAwake = fadeInOnAwake;
             FadeInOnAwake();
         }
+        
+        public BaseScreen GetCurrentScreen()
+        {
+            return _screens.Peek();
+        }
 
         protected void OpenScreen(BaseScreen baseScreenPrefab, bool clearPrevScreens = false)
         {
