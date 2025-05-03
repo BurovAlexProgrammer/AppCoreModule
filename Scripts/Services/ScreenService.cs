@@ -38,7 +38,7 @@ namespace AppCoreModule.Scripts.Services
         
         public BaseScreen GetCurrentScreen()
         {
-            return _screens.Peek();
+            return _currentScreen;
         }
 
         protected void OpenScreen(BaseScreen baseScreenPrefab, bool clearPrevScreens = false)

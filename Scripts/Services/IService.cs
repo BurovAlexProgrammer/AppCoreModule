@@ -1,17 +1,12 @@
+using System;
 using UnityEngine;
 
 namespace AppCoreModule.Scripts.Services
 {
-    public interface IService
+    public interface IService : IDisposable
     {
-        public virtual void Init()
-        {
-            Debug.Log("Init");
-        }
+        public void Init();
 
-        public void Dispose()
-        {
-            Debug.Log("Dispose");
-        }
+        public void Dispose();
     }
 }

@@ -6,4 +6,5 @@ namespace AppCoreModule.Scripts.Audio
     {
         public abstract void Play(AudioSource audioSource);
     }
+    
 }

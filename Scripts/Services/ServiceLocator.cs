@@ -6,7 +6,7 @@ namespace AppCoreModule.Scripts.Services
 {
     public static class ServiceLocator
     {
-        private readonly static Dictionary<Type, IService> _services = new();
+        private static readonly Dictionary<Type, IService> _services = new();
 
         public static void Bind<T>(IService service)
         {

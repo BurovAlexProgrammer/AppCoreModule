@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace AppCoreModule.Scripts.Audio
 {
+    [Serializable]
     [CreateAssetMenu(menuName = "Custom/Audio/Simple Audio Event")]
     public class SimpleAudioEvent : AudioEvent
     {
