@@ -46,20 +46,22 @@ namespace AppCoreModule.Scripts.Services
             OpenScreenAsync(baseScreenPrefab, clearPrevScreens).Forget();
         }
         
-        protected async UniTask OpenScreenAsync(BaseScreen baseScreenPrefab, bool clearPrevScreens = false)
-        {
+        public virtual async UniTask OpenScreenAsync(BaseScreen baseScreenPrefab, bool clearPrevScreens = false)
+        { 
+            var baseScreen = InstantiateScreen(baseScreenPrefab);
+            baseScreen.BaseInit(_transitEffectSettings);
+            
             if (_currentScreen != null)
             {
-                _screens.Push(_currentScreen);
+                var prevScreen = _currentScreen;
+                _currentScreen = baseScreen;
+                _screens.Push(prevScreen);
                 await _currentScreen.Close();
             }
 
-            if (clearPrevScreens) ClearPrevScreens();
-
-            var baseScreen = InstantiateScreen(baseScreenPrefab);
-            baseScreen.BaseInit(_transitEffectSettings);
-            await baseScreen.Open();
             _currentScreen = baseScreen;
+            if (clearPrevScreens) ClearPrevScreens();
+            await baseScreen.Open();
         }
 
         private void ClearPrevScreens()
