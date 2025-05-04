@@ -18,13 +18,15 @@ namespace AppCoreModule.Scripts.Services
             _sfxPlayer.Play(audioClip, loop);
         }
         
-        public void PlayMusic(AudioEvent audioEvent)
+        public void PlayMusic(AudioEvent audioEvent, bool loop = true)
         {
-            _musicPlayer.Play(audioEvent);
+            _musicPlayer.Stop();
+            _musicPlayer.Play(audioEvent, loop);
         }
         
         public void PlayMusic(AudioClip audioClip, bool loop = false)
         {
+            _musicPlayer.Stop();
             _musicPlayer.Play(audioClip, loop);
         }
         

@@ -14,7 +14,7 @@ namespace AppCoreModule.Scripts.Audio
             _audioSource ??= GetComponent<AudioSource>();
         }
 
-        internal void Play(AudioEvent audioEvent)
+        internal void Play(AudioEvent audioEvent, bool loop = false)
         {
             if (_audioSource == null)
             {
@@ -22,7 +22,7 @@ namespace AppCoreModule.Scripts.Audio
                 return;
             }
 
-            audioEvent.Play(_audioSource);
+            audioEvent.Play(_audioSource, loop);
         }
             
         internal void Play(AudioClip audioClip, bool loop = false)
