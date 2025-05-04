@@ -13,6 +13,7 @@ namespace AppCoreModule.Scripts.UI.Screens
 
         public void BaseInit(TransitEffectSettings transitEffectSettings)
         {
+            gameObject.SetActive(false);
             _transitEffectSettings = transitEffectSettings;
             Init();
             _initialized = true;

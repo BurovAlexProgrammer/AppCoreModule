@@ -56,7 +56,7 @@ namespace AppCoreModule.Scripts.Services
                 var prevScreen = _currentScreen;
                 _currentScreen = baseScreen;
                 _screens.Push(prevScreen);
-                await _currentScreen.Close();
+                await prevScreen.Close();
             }
 
             _currentScreen = baseScreen;
