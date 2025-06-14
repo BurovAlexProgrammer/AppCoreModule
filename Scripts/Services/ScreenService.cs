@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace AppCoreModule.Scripts.Services
 {
-    public class ScreenService: BaseService, IDisposable
+    public class ScreenService: BaseMonoService, IDisposable
     {
         [SerializeField] protected Canvas _screenCanvas;
         [SerializeField] protected Canvas _popupCanvas;

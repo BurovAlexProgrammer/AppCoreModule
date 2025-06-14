@@ -6,7 +6,7 @@ namespace AppCoreModule.Scripts.Contexts
 {
     public abstract class BaseContext : MonoBehaviour
     {
-        [SerializeField] private List<BaseService> _services;
+        [SerializeField] private List<BaseMonoService> _services;
         
     }
 }

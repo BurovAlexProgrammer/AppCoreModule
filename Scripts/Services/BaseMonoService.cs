@@ -2,7 +2,7 @@
 
 namespace AppCoreModule.Scripts.Services
 {
-    public class BaseService : MonoBehaviour, IService
+    public class BaseMonoService : MonoBehaviour, IService
     {
         public virtual void Init()
         {
