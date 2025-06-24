@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Globalization;
-using MyBox;
+using Main.Extension.Attributes;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,11 +16,43 @@ namespace _Project.Scripts.UI.Components
         [SerializeField] private TextMeshProUGUI _label;
         [SerializeField] private TMP_InputField _input;
         [SerializeField] private Slider _slider;
+        [Tooltip("Tools")]
+        [SerializeField] private string _labelText;
 
         public event Action<float> ValueChanged;
 
         private float _currentValue;
+        private RangedValue<float> _rangedValue;
 
+        private void OnValidate()
+        {
+#if UNITY_EDITOR
+            if (_label == null)
+                return;
+
+            if (string.IsNullOrEmpty(_labelText))
+            {
+                _labelText = _label.text;
+                return;
+            }
+
+            if (_label.text != _labelText) 
+                _label.text = _labelText;
+#endif
+        }
+
+        public void SetValue(RangedValue<float> rangedValue)
+        {
+            _rangedValue = rangedValue;
+            _minValue = rangedValue.min;
+            _maxValue = rangedValue.max;
+            _slider.minValue = rangedValue.min;
+            _slider.maxValue = rangedValue.max;
+            _currentValue = rangedValue.value;
+            _slider.value = _currentValue;
+            _input.SetTextWithoutNotify(_currentValue.ToString(_format));
+        }
+        
         public void SetValue(float value)
         {
             _currentValue = value;
@@ -28,13 +60,16 @@ namespace _Project.Scripts.UI.Components
             _input.SetTextWithoutNotify(_currentValue.ToString(_format));
         }
         
-        private void Awake()
+        private void Start()
         {
-            _slider.minValue = _minValue;
-            _slider.maxValue = _maxValue;
+            if (_rangedValue.Equals(default))
+            {
+                _slider.minValue = _minValue;
+                _slider.maxValue = _maxValue;
+            }
+
             _input.onSelect.AddListener(OnInputFocus);
             _input.onEndEdit.AddListener(OnInputEditEnd);
-            _input.onValueChanged.AddListener(OnInputChanged);
             _slider.onValueChanged.AddListener(OnSliderChanged);
         }
         
@@ -42,7 +77,6 @@ namespace _Project.Scripts.UI.Components
         {
             _input.onSelect.RemoveListener(OnInputFocus);
             _input.onEndEdit.RemoveListener(OnInputEditEnd);
-            _input.onValueChanged.RemoveListener(OnInputChanged);
             _slider.onValueChanged.RemoveListener(OnSliderChanged);
         }
 
@@ -85,11 +119,6 @@ namespace _Project.Scripts.UI.Components
             _currentValue = value;
             ValueChanged?.Invoke(_currentValue);
             _input.SetTextWithoutNotify(_currentValue.ToString(_format));
-        }
-
-        private void OnInputChanged(string str)
-        {
-
         }
     }
 }
